@@ -5,13 +5,14 @@ use dioxus_timer::{DioxusTimer, TimerState};
 fn App(cx: Scope) -> Element {
     dioxus_timer::use_shared_timer(cx);
     let timer = use_shared_state::<DioxusTimer>(cx)?;
-    let state = timer.read().state();
 
+    let state = timer.read().state();
     use_effect(cx, &state, |_| async move {
         if state == TimerState::Finished {
             println!("finished!");
         }
     });
+
     let time = timer.read().to_string();
     render! {
         div {
