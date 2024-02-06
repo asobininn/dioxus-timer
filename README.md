@@ -2,6 +2,13 @@
 Simple timer that works with dioxus.<br>
 Provide use_timer and use_shared_timer.
 
+## Setup
+Add the following crate
+```
+cargo add dioxus-timer
+cargo add instant
+```
+
 ## Example
 ```rust
 use dioxus::prelude::*;
