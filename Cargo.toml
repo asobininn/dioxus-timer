@@ -5,7 +5,8 @@ description = "Simple timer that works with dioxus"
 edition = "2021"
 keywords = ["dioxus", "timer"]
 license = "MIT"
-name = "dioxus_timer"
+name = "dioxus-timer"
+repository = "https://github.com/asobininn/dioxus-timer"
 version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

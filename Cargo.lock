@@ -309,7 +309,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dioxus_timer"
+name = "dioxus-timer"
 version = "0.1.0"
 dependencies = [
  "dioxus",
