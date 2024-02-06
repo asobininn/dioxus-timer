@@ -1,0 +1,16 @@
+[package]
+author = "asobi"
+categories = ["gui"]
+description = "Simple timer that works with dioxus"
+edition = "2021"
+keywords = ["dioxus", "timer"]
+license = "MIT"
+name = "dioxus_timer"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = "^0.4"
+instant = {version = "^0.1", features = ["wasm-bindgen"]}
+tokio = {version = "^1", features = ["time"]}
