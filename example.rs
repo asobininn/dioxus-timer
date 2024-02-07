@@ -3,7 +3,7 @@ use dioxus_timer::{DioxusTimer, TimerState};
 
 #[component]
 fn App(cx: Scope) -> Element {
-    dioxus_timer::use_shared_timer(cx);
+    dioxus_timer::use_shared_timer(cx, instant::Duration::from_millis(16));
     let timer = use_shared_state::<DioxusTimer>(cx)?;
 
     let state = timer.read().state();

@@ -175,7 +175,7 @@ impl Display for DioxusTimer {
 /// # Examples
 ///
 /// ```
-/// let timer = dioxus_timer::use_timer(cx);
+/// let timer = dioxus_timer::use_timer(cx, Duration::from_millis(16));
 /// use_effect(cx, (), |()| {
 ///     let timer = timer.clone();
 ///     async move {
@@ -185,7 +185,7 @@ impl Display for DioxusTimer {
 /// });
 /// render!("{timer}")
 /// ```
-pub fn use_timer(cx: Scope) -> UseState<DioxusTimer> {
+pub fn use_timer(cx: Scope, tick: Duration) -> UseState<DioxusTimer> {
     let timer = use_state(cx, DioxusTimer::new);
 
     use_future!(cx, || {
@@ -193,7 +193,7 @@ pub fn use_timer(cx: Scope) -> UseState<DioxusTimer> {
         async move {
             loop {
                 timer.make_mut().update();
-                tokio::time::sleep(Duration::from_millis(16)).await;
+                tokio::time::sleep(tick).await;
             }
         }
     });
@@ -205,12 +205,12 @@ pub fn use_timer(cx: Scope) -> UseState<DioxusTimer> {
 /// # Examples
 ///
 /// ```
-/// dioxus_timer::use_shared_timer(cx);
+/// dioxus_timer::use_shared_timer(cx, Duration::from_millis(16));
 /// let timer = use_shared_state::<dioxus_timer::DioxusTimer>(cx)?;
 /// let state = timer.read().state();
 /// let start_handle = move |_| { timer.write().start(); };
 /// ```
-pub fn use_shared_timer(cx: Scope) {
+pub fn use_shared_timer(cx: Scope, tick: Duration) {
     use_shared_state_provider(cx, DioxusTimer::new);
     let timer = use_shared_state::<DioxusTimer>(cx).unwrap();
 
@@ -219,7 +219,7 @@ pub fn use_shared_timer(cx: Scope) {
         async move {
             loop {
                 timer.write().update();
-                tokio::time::sleep(Duration::from_millis(16)).await;
+                tokio::time::sleep(tick).await;
             }
         }
     });
