@@ -1,9 +1,14 @@
 use dioxus::prelude::*;
 use dioxus_timer::{DioxusTimer, TimerState};
 
+#[cfg(target_arch = "wasm32")]
+use instant::{Duration, Instant};
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::{Duration, Instant};
+
 #[component]
 fn App(cx: Scope) -> Element {
-    dioxus_timer::use_shared_timer(cx, instant::Duration::from_millis(16));
+    dioxus_timer::use_shared_timer(cx, Duration::from_millis(16));
     let timer = use_shared_state::<DioxusTimer>(cx)?;
 
     let state = timer.read().state();

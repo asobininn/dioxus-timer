@@ -1,6 +1,14 @@
 use dioxus::prelude::*;
-use instant::{Duration, Instant};
 use std::fmt::Display;
+
+#[cfg(target_arch = "wasm32")]
+use async_std::task::sleep;
+#[cfg(target_arch = "wasm32")]
+use instant::{Duration, Instant};
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::{Duration, Instant};
+#[cfg(not(target_arch = "wasm32"))]
+use tokio::time::sleep;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum TimerState {
@@ -193,7 +201,7 @@ pub fn use_timer(cx: Scope, tick: Duration) -> UseState<DioxusTimer> {
         async move {
             loop {
                 timer.make_mut().update();
-                tokio::time::sleep(tick).await;
+                sleep(tick).await;
             }
         }
     });
@@ -219,7 +227,7 @@ pub fn use_shared_timer(cx: Scope, tick: Duration) {
         async move {
             loop {
                 timer.write().update();
-                tokio::time::sleep(tick).await;
+                sleep(tick).await;
             }
         }
     });

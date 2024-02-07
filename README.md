@@ -6,7 +6,12 @@ Provide use_timer and use_shared_timer.
 Add the following crate
 ```
 cargo add dioxus-timer
-cargo add instant
+```
+
+### If dioxus-web, also add
+```
+cargo add instant -F "wasm-bindgen"
+cargo add async_std
 ```
 
 ## Example
