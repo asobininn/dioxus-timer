@@ -174,11 +174,7 @@ impl Display for DioxusTimer {
     }
 }
 
-/// Manages a DioxusTimer instance within the Dioxus GUI framework using the provided `Scope`.
-///
-/// # Returns
-///
-/// Returns a `UseState` containing the DioxusTimer instance.
+/// Manages a DioxusTimer instance within the Dioxus GUI framework.
 ///
 /// # Examples
 ///
