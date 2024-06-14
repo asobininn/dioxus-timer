@@ -13,6 +13,12 @@ cargo add dioxus-timer
 cargo add async_std
 ```
 
+## Dioxus support table
+| dioxus | dioxus-timer |
+| ------ | ------------ |
+| ^0.5   | 0.3          |
+| ^0.4   | 0.2          |
+
 ## Example
 ```rust
 #![allow(non_snake_case)]
