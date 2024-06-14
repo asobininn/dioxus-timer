@@ -183,52 +183,23 @@ impl Display for DioxusTimer {
 /// # Examples
 ///
 /// ```
-/// let timer = dioxus_timer::use_timer(cx, Duration::from_millis(16));
-/// use_effect(cx, (), |()| {
-///     let timer = timer.clone();
-///     async move {
-///         timer.make_mut().set_preset_time(Duration::from_secs(10));
-///         timer.make_mut().start();
-///     }
-/// });
-/// render!("{timer}")
+///let mut timer = use_timer(Duration::from_millis(16));
+///use_effect(move || {
+///    spawn(async move {
+///        timer.write().set_preset_time(Duration::from_secs(10));
+///        timer.write().start();
+///    });
+///});
+///rsx!("{timer}"
 /// ```
-pub fn use_timer(cx: Scope, tick: Duration) -> UseState<DioxusTimer> {
-    let timer = use_state(cx, DioxusTimer::new);
+pub fn use_timer(tick: Duration) -> Signal<DioxusTimer> {
+    let mut timer = use_signal(DioxusTimer::new);
 
-    use_future!(cx, || {
-        let timer = timer.clone();
-        async move {
-            loop {
-                timer.make_mut().update();
-                sleep(tick).await;
-            }
+    use_future(move || async move {
+        loop {
+            timer.write().update();
+            sleep(tick).await;
         }
     });
-    timer.clone()
-}
-
-/// Manages a shared DioxusTimer instance within the Dioxus GUI framework using the provided `Scope`.
-///
-/// # Examples
-///
-/// ```
-/// dioxus_timer::use_shared_timer(cx, Duration::from_millis(16));
-/// let timer = use_shared_state::<dioxus_timer::DioxusTimer>(cx)?;
-/// let state = timer.read().state();
-/// let start_handle = move |_| { timer.write().start(); };
-/// ```
-pub fn use_shared_timer(cx: Scope, tick: Duration) {
-    use_shared_state_provider(cx, DioxusTimer::new);
-    let timer = use_shared_state::<DioxusTimer>(cx).unwrap();
-
-    use_future!(cx, || {
-        to_owned![timer];
-        async move {
-            loop {
-                timer.write().update();
-                sleep(tick).await;
-            }
-        }
-    });
+    timer
 }

@@ -1,39 +1,39 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
-use dioxus_timer::{DioxusTimer, TimerState};
+use dioxus_timer::{use_timer, DioxusTimer, TimerState};
+use std::time::Duration;
+use tracing::Level;
 
-#[cfg(target_arch = "wasm32")]
-use instant::{Duration, Instant};
-#[cfg(not(target_arch = "wasm32"))]
-use std::time::{Duration, Instant};
+fn main() {
+    dioxus_logger::init(Level::INFO).expect("failed to init logger");
+    dioxus::launch(App);
+}
 
 #[component]
-fn App(cx: Scope) -> Element {
-    dioxus_timer::use_shared_timer(cx, Duration::from_millis(16));
-    let timer = use_shared_state::<DioxusTimer>(cx)?;
+fn App() -> Element {
+    let timer = use_timer(Duration::from_millis(16));
 
     let state = timer.read().state();
-    use_effect(cx, &state, |_| async move {
+    use_effect(move || {
         if state == TimerState::Finished {
             println!("finished!");
         }
     });
 
     let time = timer.read().to_string();
-    render! {
+    rsx! {
         div {
-            h1 { "Timer" }
-            p { "{time}" }
-            p { "{state}" }
-            TimerControll {}
-            TimerSet {}
+            h1 {"Timer"}
+            p {"{time}"}
+            p {"{state}"}
+            TimerControll {timer}
+            TimerSet {timer}
         }
     }
 }
 
 #[component]
-fn TimerControll(cx: Scope) -> Element {
-    let timer = use_shared_state::<DioxusTimer>(cx)?;
-
+fn TimerControll(timer: Signal<DioxusTimer>) -> Element {
     let start_handle = move |_| {
         timer.write().start();
     };
@@ -45,38 +45,37 @@ fn TimerControll(cx: Scope) -> Element {
     };
 
     let controller = match timer.read().state() {
-        dioxus_timer::TimerState::Inactive => rsx! {
+        TimerState::Inactive => rsx! {
             button { onclick: start_handle, "Start" }
             button { onclick: reset_handle, "Reset" }
         },
-        dioxus_timer::TimerState::Working => rsx! {
+        TimerState::Working => rsx! {
             button { onclick: pause_handle, "Pause" }
             button { onclick: reset_handle, "Reset" }
         },
-        dioxus_timer::TimerState::Paused => rsx! {
+        TimerState::Paused => rsx! {
             button { onclick: start_handle, "Resume" }
             button { onclick: reset_handle, "Reset" }
         },
-        dioxus_timer::TimerState::Finished => rsx! {
+        TimerState::Finished => rsx! {
             button { onclick: reset_handle, "Reset" }
         },
     };
-    cx.render(controller)
+    controller
 }
 
 #[component]
-fn TimerSet(cx: Scope) -> Element {
-    let timer = use_shared_state::<DioxusTimer>(cx)?;
-
-    let submit_handle = move |evt: FormEvent| {
-        let hours = evt.values["hours"][0].parse::<u64>().unwrap();
-        let minutes = evt.values["minutes"][0].parse::<u64>().unwrap();
-        let seconds = evt.values["seconds"][0].parse::<u64>().unwrap();
-        let preset_dur = instant::Duration::from_secs(hours * 3600 + minutes * 60 + seconds);
+fn TimerSet(timer: Signal<DioxusTimer>) -> Element {
+    let submit_handle = move |ev: Event<FormData>| {
+        let values = ev.values();
+        let hours = values["hours"].first().unwrap().parse::<u64>().unwrap();
+        let minutes = values["minutes"].first().unwrap().parse::<u64>().unwrap();
+        let seconds = values["seconds"].first().unwrap().parse::<u64>().unwrap();
+        let preset_dur = Duration::from_secs(hours * 3600 + minutes * 60 + seconds);
         timer.write().set_preset_time(preset_dur);
     };
 
-    render! {
+    rsx! {
         div {
             form {
                 onsubmit: submit_handle,

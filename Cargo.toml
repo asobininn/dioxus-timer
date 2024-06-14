@@ -7,12 +7,12 @@ keywords = ["dioxus", "timer"]
 license = "MIT"
 name = "dioxus-timer"
 repository = "https://github.com/asobininn/dioxus-timer"
-version = "0.2.0"
+version = "0.3.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = "^0.4"
+dioxus = "^0.5"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tokio = {version = "^1", features = ["time"]}
