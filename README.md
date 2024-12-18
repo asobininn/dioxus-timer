@@ -8,11 +8,6 @@ Add the following crate
 cargo add dioxus-timer
 ```
 
-### If dioxus-web, also add
-```
-cargo add async_std
-```
-
 ## Dioxus support table
 | dioxus | dioxus-timer |
 | ------ | ------------ |
