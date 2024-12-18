@@ -1,13 +1,6 @@
 use dioxus::prelude::*;
 use std::fmt::Display;
-
-#[cfg(target_arch = "wasm32")]
-use async_std::task::sleep;
-#[cfg(target_arch = "wasm32")]
-use instant::{Duration, Instant};
-#[cfg(not(target_arch = "wasm32"))]
 use std::time::{Duration, Instant};
-#[cfg(not(target_arch = "wasm32"))]
 use tokio::time::sleep;
 
 #[derive(Debug, Clone, Copy, PartialEq)]

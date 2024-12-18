@@ -1,11 +1,8 @@
-#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_timer::{use_timer, DioxusTimer, TimerState};
 use std::time::Duration;
-use tracing::Level;
 
 fn main() {
-    dioxus_logger::init(Level::INFO).expect("failed to init logger");
     dioxus::launch(App);
 }
 

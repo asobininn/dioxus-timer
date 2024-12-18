@@ -16,19 +16,17 @@ cargo add async_std
 ## Dioxus support table
 | dioxus | dioxus-timer |
 | ------ | ------------ |
+| ^0.6   | 0.4          |
 | ^0.5   | 0.3          |
 | ^0.4   | 0.2          |
 
 ## Example
 ```rust
-#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus_timer::{use_timer, DioxusTimer, TimerState};
 use std::time::Duration;
-use tracing::Level;
 
 fn main() {
-    dioxus_logger::init(Level::INFO).expect("failed to init logger");
     dioxus::launch(App);
 }
 
