@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_timer::{use_timer, DioxusTimer, TimerState};
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 fn main() {
     dioxus::launch(App);
@@ -61,13 +61,24 @@ fn TimerControll(timer: Signal<DioxusTimer>) -> Element {
     controller
 }
 
+fn formdata_to_map(data: &[(String, FormValue)]) -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for (key, value) in data {
+        if let FormValue::Text(text) = value {
+            map.insert(key.to_owned(), text.to_owned());
+        }
+    }
+    map
+}
+
 #[component]
 fn TimerSet(timer: Signal<DioxusTimer>) -> Element {
     let submit_handle = move |ev: Event<FormData>| {
-        let values = ev.values();
-        let hours = values["hours"].first().unwrap().parse::<u64>().unwrap();
-        let minutes = values["minutes"].first().unwrap().parse::<u64>().unwrap();
-        let seconds = values["seconds"].first().unwrap().parse::<u64>().unwrap();
+        ev.prevent_default();
+        let values = formdata_to_map(&ev.values());
+        let hours = values["hours"].parse::<u64>().unwrap();
+        let minutes = values["minutes"].parse::<u64>().unwrap();
+        let seconds = values["seconds"].parse::<u64>().unwrap();
         let preset_dur = Duration::from_secs(hours * 3600 + minutes * 60 + seconds);
         timer.write().set_preset_time(preset_dur);
     };
